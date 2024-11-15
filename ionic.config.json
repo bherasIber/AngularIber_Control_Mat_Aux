@@ -1,0 +1,7 @@
+{
+  "name": "AppUtilidades",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
