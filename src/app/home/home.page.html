@@ -1,20 +1,51 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+<!--ion-menu side="start" contentId="main-content">
+  <ion-header>
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title>Menu</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item routerLink="/home/logistica" routerDirection="root">Logística</ion-item>
+      <ion-item routerLink="/home/general" routerDirection="root">General</ion-item>
+      <ion-item (click)="logout()">Logout</ion-item>
+    </ion-list>
+  </ion-content>
+</!--ion-menu>
+<div-- class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding"> Tap the button in the toolbar to open the menu. </ion-content>
+</div-->
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
-</ion-content>
+<ion-split-pane contentId="main-content" style="--side-min-width: 0px; --side-max-width: 15%;">
+  <ion-menu side="start" contentId="main-content">
+    <!-- Menú lateral -->
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Menú</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list>
+        <ion-item routerLink="/home/general" routerDirection="root" *ngIf="role === 'logistica' || role === 'diseño' || 
+                                                                              role === 'calidad' || role === 'laboratorio' || 
+                                                                              role === 'admin'">General</ion-item>
+        <ion-item routerLink="/home/logistica" routerDirection="root" *ngIf="role === 'logistica' || role === 'admin'">Logística</ion-item>
+        <ion-item routerLink="/home/diseno" routerDirection="root" *ngIf="role === 'diseño' || role === 'admin'">Diseño</ion-item>
+        <ion-item routerLink="/home/calidad" routerDirection="root" *ngIf="role === 'calidad' || role === 'admin'">Calidad</ion-item>
+        <ion-item routerLink="/home/laboratorio" routerDirection="root" *ngIf="role === 'laboratorio' || role === 'admin'">Laboratorio</ion-item>
+        <ion-item (click)="logout()">Logout</ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <!-- Contenido principal -->
+  <ion-router-outlet id="main-content"></ion-router-outlet>
+</ion-split-pane>

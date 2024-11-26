@@ -5,6 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
+import { GeneralPageModule } from '../pages/general/general.module';
+import { LoginPageModule } from '../pages/login/login.module';
+import { LogisticaPageModule } from '../pages/logistica/logistica.module';
+import { DisenoPageModule } from '../pages/diseno/diseno.module';
+import { CalidadPageModule } from '../pages/calidad/calidad.module';
+import { LaboratorioPageModule } from '../pages/laboratorio/laboratorio.module';
 
 
 @NgModule({
@@ -12,7 +18,13 @@ import { HomePageRoutingModule } from './home-routing.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
+    GeneralPageModule,
+    LoginPageModule,
+    LogisticaPageModule,
+    DisenoPageModule,
+    CalidadPageModule,
+    LaboratorioPageModule,
   ],
   declarations: [HomePage]
 })

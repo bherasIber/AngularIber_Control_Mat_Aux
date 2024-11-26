@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Gestión de Logística</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <!-- Fila para Referencia y Descripción en la misma línea -->
+    <ion-row>
+      <ion-col size="2" >
+        <ion-item>
+          <ion-label position="stacked" style="padding-bottom: 10px;">Referencia</ion-label>
+          <ion-input
+            type="text"
+            [(ngModel)]="logisticaData.fcReferencia"
+            [class.invalid]="!logisticaData.fcReferencia"
+            name="fcReferencia"
+            placeholder="Indique referencia"
+            required
+            (ionBlur)="onReferenciaBlur($event)"
+            style="text-transform: uppercase;"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="10">
+        <ion-item>
+          <ion-label position="stacked" style="padding-bottom: 10px;">Descripción</ion-label>
+          <ion-input
+            type="text"
+            [(ngModel)]="logisticaData.fcDesciripcion"
+            [class.invalid]="!logisticaData.fcDesciripcion"
+            name="fcDesciripcion"
+            placeholder="Ingrese la descripción"
+            readonly="true"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!-- Fila para Fecha de Envío y Observaciones en la misma línea -->
+    <ion-row>
+      <ion-col size="4">
+        <ion-item>
+          <ion-label position="stacked" style="padding-bottom: 10px;">Fecha de Envío</ion-label>
+          <ion-datetime
+            [(ngModel)]="logisticaData.fdtLogisticaEnvio"
+            [class.invalid]="!logisticaData.fdtLogisticaEnvio"
+            name="fdtLogisticaEnvio"
+            presentation="date-time"
+            placeholder="Seleccione la fecha y hora"
+            firstDayOfWeek="1"
+            required="true"
+          ></ion-datetime>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="8">
+        <ion-item>
+          <ion-label position="stacked">Observaciones</ion-label>
+          <ion-textarea
+            [(ngModel)]="logisticaData.fcLogisticaObs"
+            name="fcLogisticaObs"
+            placeholder="Ingrese las observaciones"
+            rows="10"
+            auto-grow="true"
+          ></ion-textarea>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!-- Botón para guardar -->
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" color="success" type="submit" (click)="saveChanges()">
+          Guardar
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

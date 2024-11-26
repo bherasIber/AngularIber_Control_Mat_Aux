@@ -1,0 +1,238 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>General</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-spinner *ngIf="loading"></ion-spinner>
+  <p *ngIf="error">{{ error }}</p>
+  <!--ion-list *ngIf="!loading && !error">
+    <ion-item *ngFor="let item of generalData">
+      <ion-label>
+        <h2>{{ item.fcReferencia }} - {{ item.fcVersion }}</h2>
+        <p>{{ item.fcDesciripcion }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list-->
+  <ion-grid *ngIf="!loading && !error">
+    <ion-row>
+      <ion-col>
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 10%;">
+                <span (click)="sortData('fcReferencia')">
+                  Referencia
+                  <ion-icon
+                    name="arrow-up-outline"
+                    *ngIf="sortColumn === 'fcReferencia' && sortDirection === 'asc'"
+                  ></ion-icon>
+                  <ion-icon
+                    name="arrow-down-outline"
+                    *ngIf="sortColumn === 'fcReferencia' && sortDirection === 'desc'"
+                  ></ion-icon>
+                </span>
+                <ion-input
+                  type="text"
+                  placeholder="Filtrar..."
+                  [(ngModel)]="filters.fcReferencia"
+                  (ionInput)="applyFilters()"
+                ></ion-input>
+              </th>
+              <th style="width: 22%;">
+                <span (click)="sortData('fcDesciripcion')">
+                  Descripción
+                  <ion-icon
+                    name="arrow-up-outline"
+                    *ngIf="sortColumn === 'fcDesciripcion' && sortDirection === 'asc'"
+                  ></ion-icon>
+                  <ion-icon
+                    name="arrow-down-outline"
+                    *ngIf="sortColumn === 'fcDesciripcion' && sortDirection === 'desc'"
+                  ></ion-icon>
+                </span>
+                <ion-input
+                  type="text"
+                  placeholder="Filtrar..."
+                  [(ngModel)]="filters.fcDesciripcion"
+                  (ionInput)="applyFilters()"
+                ></ion-input>
+              </th>
+              <th style="width: 15%;">
+                <span (click)="sortData('fdtLogisticaEnvio')">
+                  Logística Envío
+                  <ion-icon
+                    name="arrow-up-outline"
+                    *ngIf="sortColumn === 'fdtLogisticaEnvio' && sortDirection === 'asc'"
+                  ></ion-icon>
+                  <ion-icon
+                    name="arrow-down-outline"
+                    *ngIf="sortColumn === 'fdtLogisticaEnvio' && sortDirection === 'desc'"
+                  ></ion-icon>
+                </span>
+                <ion-input
+                  type="text"
+                  placeholder="Filtrar..."
+                  [(ngModel)]="filters.fdtLogisticaEnvio"
+                  (ionInput)="applyFilters()"
+                ></ion-input>
+              </th>
+              <th style="width: 10%;">
+                <span (click)="sortData('fbDisenoRevisado')">
+                  Diseño Revisado
+                  <ion-icon
+                    name="arrow-up-outline"
+                    *ngIf="sortColumn === 'fbDisenoRevisado' && sortDirection === 'asc'"
+                  ></ion-icon>
+                  <ion-icon
+                    name="arrow-down-outline"
+                    *ngIf="sortColumn === 'fbDisenoRevisado' && sortDirection === 'desc'"
+                  ></ion-icon>
+                </span>
+                <ion-select
+                  [(ngModel)]="filters.fbDisenoRevisado"
+                  (ionChange)="applyFilters()"
+                >
+                  <ion-select-option value="">Todos</ion-select-option>
+                  <ion-select-option value="true">Sí</ion-select-option>
+                  <ion-select-option value="false">No</ion-select-option>
+                </ion-select>
+              </th>
+              <th style="width: 10%;">
+                <span (click)="sortData('fbCalidadRevisado')">
+                  Calidad Revisado
+                  <ion-icon
+                    name="arrow-up-outline"
+                    *ngIf="sortColumn === 'fbCalidadRevisado' && sortDirection === 'asc'"
+                  ></ion-icon>
+                  <ion-icon
+                    name="arrow-down-outline"
+                    *ngIf="sortColumn === 'fbCalidadRevisado' && sortDirection === 'desc'"
+                  ></ion-icon>
+                </span>
+                <ion-select
+                  [(ngModel)]="filters.fbCalidadRevisado"
+                  (ionChange)="applyFilters()"
+                >
+                  <ion-select-option value="">Todos</ion-select-option>
+                  <ion-select-option value="true">Sí</ion-select-option>
+                  <ion-select-option value="false">No</ion-select-option>
+                </ion-select>
+              </th>
+              <th style="width: 10%;">
+                <span (click)="sortData('fbLaboratorioRevisado')">
+                  Laboratorio Revisado
+                  <ion-icon
+                    name="arrow-up-outline"
+                    *ngIf="sortColumn === 'fbLaboratorioRevisado' && sortDirection === 'asc'"
+                  ></ion-icon>
+                  <ion-icon
+                    name="arrow-down-outline"
+                    *ngIf="sortColumn === 'fbLaboratorioRevisado' && sortDirection === 'desc'"
+                  ></ion-icon>
+                </span>
+                <ion-select
+                  [(ngModel)]="filters.fbLaboratorioRevisado"
+                  (ionChange)="applyFilters()"
+                >
+                  <ion-select-option value="">Todos</ion-select-option>
+                  <ion-select-option value="true">Sí</ion-select-option>
+                  <ion-select-option value="false">No</ion-select-option>
+                </ion-select>
+              </th>
+              <th style="width: 5%;">Versión</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Fila principal -->
+            <ng-container *ngFor="let item of filteredData; let i = index">
+              <tr>
+                <td>{{ item.fcReferencia }}</td>
+                <td>{{ item.fcDesciripcion }}</td>
+                <td>{{ item.fdtLogisticaEnvio | date: 'dd/MM/yyyy HH:mm a' }}</td>
+                <td class="icon-text-cell">
+                  <div class="icon-text-wrapper">
+                    <span>{{ item.fbDisenoRevisado ? 'Sí' : 'No' }}</span>
+                    <ion-icon *ngIf="item.fdtDisenoRevisado"
+                    [name]="item.fdtDisenoRevisado !== null && item.fbDisenoRevisado === true ? 'checkmark-circle' : 'close-circle'"
+                    slot="end"
+                    [color]="item.fdtDisenoRevisado !== null && item.fbDisenoRevisado === true ? 'success' : 'danger'"
+                    ></ion-icon>
+                  </div>
+                </td>
+                <td class="icon-text-cell">
+                  <div class="icon-text-wrapper">
+                    <span>{{ item.fbCalidadRevisado ? 'Sí' : 'No' }}</span>
+                    <ion-icon *ngIf="item.fdtCalidadRevisado !== null"
+                    [name]="item.fdtCalidadRevisado !== null && item.fbCalidadRevisado === true ? 'checkmark-circle' : 'close-circle'"
+                    slot="end"
+                    [color]="item.fdtCalidadRevisado !== null && item.fbCalidadRevisado === true ? 'success' : 'danger'"
+                    ></ion-icon>
+                  </div>
+                </td>
+                <td class="icon-text-cell">
+                  <div class="icon-text-wrapper">
+                    <span>{{ item.fbLaboratorioRevisado ? 'Sí' : 'No' }}</span>
+                    <ion-icon *ngIf="item.fdtLaboratorioRevisado !== null"
+                    [name]="item.fdtLaboratorioRevisado !== null && item.fbLaboratorioRevisado === true ? 'checkmark-circle' : 'close-circle'"
+                    slot="end"
+                    [color]="item.fdtLaboratorioRevisado !== null && item.fbLaboratorioRevisado === true ? 'success' : 'danger'"
+                    ></ion-icon>
+                  </div>
+                </td>
+                <td>{{ item.fcVersion }}</td>
+                <td>
+                  <ion-button size="small" color="primary" (click)="toggleDetails(i)">
+                    {{ selectedRow === i ? 'Ocultar' : 'Ver más' }}
+                  </ion-button>
+                </td>
+              </tr>
+              <!-- Fila de detalles adicionales -->
+              <tr *ngIf="selectedRow === i">
+                <td colspan="2">
+                  <div class="details">
+                    <h4><strong>Logística</strong></h4>
+                    <p><strong>Envío:</strong> {{ item.fdtLogisticaEnvio | date: 'dd/MM/yyyy HH:mm a' }}</p>
+                    <p><strong>Observaciones:</strong> {{ item.fcLogisticaObs }}</p>
+                  </div>
+                </td>
+                <td colspan="2">
+                  <div class="{{(item.fdtDisenoRevisado !== null && item.fbDisenoRevisado === true) || item.fdtDisenoRevisado === null ? 'details' : 'detailsError'}}">
+                    <h4><strong>Diseño</strong></h4>
+                    <p><strong>Recibido:</strong> {{ item.fdtDisenoRecibido | date: 'dd/MM/yyyy HH:mm a' }}</p>
+                    <p><strong>Revisado:</strong> {{ item.fdtDisenoRevisado | date: 'dd/MM/yyyy HH:mm a' }}</p>
+                    <p><strong>Envío:</strong> {{ item.fdtDisenoEnvio | date: 'dd/MM/yyyy HH:mm a'  }}</p>
+                    <p><strong>Observaciones:</strong> {{ item.fcDisenoObs }}</p>
+                    <ion-button size="small" *ngIf="item.fdtDisenoRevisado === null && (role === 'diseño' || role === 'admin')" (click)="tratarReferencia(item.fcId, item.fcReferencia, item.fcDesciripcion, item.fcVersion)">
+                      Editar
+                    </ion-button>
+                  </div>
+                </td>
+                <td colspan="2">
+                  <div class="{{(item.fdtCalidadRevisado !== null && item.fbCalidadRevisado === true) || item.fdtCalidadRevisado === null ? 'details' : 'detailsError'}}">
+                    <h4><strong>Calidad</strong></h4>
+                    <p><strong>Recibido:</strong> {{ item.fdtCalidadRecibido | date: 'dd/MM/yyyy HH:mm a' }}</p>
+                    <p><strong>Revisado:</strong> {{ item.fdtCalidadRevisado | date: 'dd/MM/yyyy HH:mm a' }}</p>
+                    <p><strong>Envío:</strong> {{ item.fdtCalidadEnvio | date: 'dd/MM/yyyy HH:mm a'  }}</p>
+                    <p><strong>Observaciones:</strong> {{ item.fcCalidadObs }}</p>
+                  </div>
+                </td>
+                <td colspan="2">
+                  <div class="{{(item.fdtLaboratorioRevisado !== null && item.fbLaboratorioRevisado === true) || item.fdtLaboratorioRevisado === null ? 'details' : 'detailsError'}}">
+                    <h4><strong>Laboratorio</strong></h4>
+                    <p><strong>Recibido:</strong> {{ item.fdtLaboratorioRecibido | date: 'dd/MM/yyyy HH:mm a' }}</p>
+                    <p><strong>Revisado:</strong> {{ item.fdtLaboratorioRevisado | date: 'dd/MM/yyyy HH:mm a' }}</p>
+                    <p><strong>Envío:</strong> {{ item.fdtLaboratorioFinalizado | date: 'dd/MM/yyyy HH:mm a'  }}</p>
+                    <p><strong>Observaciones:</strong> {{ item.fcLaboratorioObs }}</p>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

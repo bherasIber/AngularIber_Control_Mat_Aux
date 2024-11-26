@@ -1,0 +1,45 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+.details {
+  background-color: #f9f9f9;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.detailsError {
+  background-color: #f8b8b8;
+  padding: 16px;
+  border: 1px solid #f8b8b8;
+  border-radius: 4px;
+}
+
+.icon-text-cell {
+  text-align: center; /* Alineación horizontal del contenido en el td */
+  vertical-align: middle; /* Alineación vertical del contenido en el td */
+}
+
+.icon-text-wrapper {
+  display: flex; /* Activa Flexbox */
+  align-items: center; /* Alinea los elementos verticalmente al centro */
+  justify-content: center; /* Centra los elementos horizontalmente */
+  gap: 0.5rem; /* Espaciado entre el icono y el texto */
+}
+
+ion-icon {
+  font-size: 1.5rem; /* Ajusta el tamaño del icono */
+}
