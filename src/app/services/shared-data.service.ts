@@ -15,7 +15,13 @@ export class SharedDataService {
   listaEmailData = this.listaEmailDataSource.asObservable();  // Exponemos el observable
 
   //Datos de diseño
-  private dataDiseno: any;  
+  private dataDiseno: any;
+
+  //Datos de calidad
+  private dataCalidad: any;
+
+   //Datos de laboratorio
+   private dataLaboratorio: any;
 
   constructor() { }
 
@@ -48,5 +54,35 @@ export class SharedDataService {
   // Método para limpiar los datos diseño
   clearDataDiseno(): void {
     this.dataDiseno = null;
+  }
+
+   // Setter para guardar los datos Calidad
+   setDataCalidad(value: any): void {
+    this.dataCalidad = value;
+  }
+
+  // Getter para obtener los datos Calidad
+  getDataCalidad(): any {
+    return this.dataCalidad;
+  }
+
+  // Método para limpiar los datos Calidad
+  clearDataCalidad(): void {
+    this.dataCalidad = null;
+  }
+
+   // Setter para guardar los datos Laboratorio
+   setDataLaboratorio(value: any): void {
+    this.dataLaboratorio = value;
+  }
+
+  // Getter para obtener los datos Laboratorio
+  getDataLaboratorio(): any {
+    return this.dataLaboratorio;
+  }
+
+  // Método para limpiar los datos Laboratorio
+  clearDataLaboratorio(): void {
+    this.dataLaboratorio = null;
   }
 }

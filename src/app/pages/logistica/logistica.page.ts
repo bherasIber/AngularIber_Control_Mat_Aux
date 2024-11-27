@@ -15,7 +15,8 @@ export class LogisticaPage implements OnInit {
     fcReferencia: '',
     fcDesciripcion: '',
     fdtLogisticaEnvio: '',
-    fcLogisticaObs: ''
+    fcLogisticaObs: '',
+    fcVersion: ''
   };
   datos: any[] = [];
 
@@ -37,7 +38,7 @@ export class LogisticaPage implements OnInit {
       fcDesciripcion: '',
       fdtLogisticaEnvio: '',
       fcLogisticaObs: '',
-      fcVersion: '-'
+      fcVersion: ''
     };
   }
 

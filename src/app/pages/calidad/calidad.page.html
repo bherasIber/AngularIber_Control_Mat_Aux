@@ -5,6 +5,63 @@
 </ion-header>
 
 <ion-content>
-  <p>Contenido de la página Calidad.</p>
-</ion-content>
+  <div class="form-container">
+    <form [formGroup]="calidadForm" (ngSubmit)="guardarDatos()" class="form-layout">
+      <!-- Referencia y Descripción -->
+      <div class="form-row">
+        <div class="form-group small-width">
+          <label for="referencia">Referencia:</label>
+          <input id="referencia" formControlName="fcReferencia" type="text" placeholder="Referencia" />
+        </div>
+        <div class="form-group">
+          <label for="descripcion">Descripción:</label>
+          <input id="descripcion" formControlName="fcDescripcion" type="text" placeholder="Descripción" />
+        </div>
+      </div>
 
+      <!-- Fechas -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fechaRecibido">Fecha Recibido:</label>
+          <input id="fechaRecibido" formControlName="fdtCalidadRecibido" type="datetime-local" />
+        </div>
+        <div class="form-group">
+          <label for="fechaRevisado">Fecha Revisado:</label>
+          <input id="fechaRevisado" formControlName="fdtCalidadRevisado" type="datetime-local" />
+        </div>
+        <div class="form-group">
+          <label for="fechaEnvio">Fecha Enviado:</label>
+          <input id="fechaEnvio" formControlName="fdtCalidadEnvio" type="datetime-local" />
+        </div>
+      </div>
+
+      <!-- Validación y Observaciones -->
+      <div class="form-row">
+        <div class="form-group small-width">
+          <label for="validacion">Validación:</label>
+          <select id="validacion" formControlName="fbCalidadRevisado">
+            <option value="true">OK</option>
+            <option value="false">KO</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="observaciones">Observaciones:</label>
+          <textarea id="observaciones" formControlName="fcCalidadObs" rows="6" placeholder="Escribe tus observaciones"></textarea>
+        </div>
+      </div>
+
+      <!-- Botones Guardar y Limpiar -->
+      <div class="form-buttons">
+        <button type="submit" [disabled]="!calidadForm.valid" class="btn-green">Guardar</button>
+        <button type="button" (click)="limpiarFormulario()" class="btn-clear">Limpiar</button>
+      </div>
+    </form>
+
+  </div>
+
+  <!-- Mensaje emergente -->
+  <div *ngIf="mensajeEmergente" class="popup">
+    <p>{{ mensajeEmergente }}</p>
+    <button (click)="cerrarPopup()">Cerrar</button>
+  </div>
+</ion-content>

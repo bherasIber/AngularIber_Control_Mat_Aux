@@ -39,12 +39,15 @@ export class GeneralPage implements OnInit {
   async ngOnInit() {
 
     //Ordeno por fecha envío logística desc.
+    //this.sortColumn = 'fdtLogisticaEnvio'; // Columna por defecto
+    //await this.loadGeneralData();
+    this.role = this.authService.getRole();
+  }
+
+  async ionViewWillEnter() {
     this.sortColumn = 'fdtLogisticaEnvio'; // Columna por defecto
     await this.loadGeneralData();
     this.role = this.authService.getRole();
-
-
-
   }
 
   // Método para cargar los datos
@@ -133,16 +136,29 @@ export class GeneralPage implements OnInit {
     });
   }
 
-  tratarReferencia(id: any, referencia: any, descripcion: any, version: any) {
+  tratarReferenciaDiseno(id: any, referencia: any, descripcion: any, version: any) {
     const selectedData = { id, referencia, descripcion, version };
     this.sharedDataService.setDataDiseno(selectedData);
     this.navCtrl.navigateForward('/home/diseno');
+   
     /**this.navCtrl.navigateForward('/home/diseno', {
       queryParams: {
         fcReferencia: referencia,
         fcDescripcion: descripcion,
       },
     });*/
+  }
+
+  tratarReferenciaCalidad(id: any, referencia: any, descripcion: any, version: any) {
+    const selectedData = { id, referencia, descripcion, version };
+    this.sharedDataService.setDataCalidad(selectedData);
+    this.navCtrl.navigateForward('/home/calidad');
+  }
+
+  tratarReferenciaLaboratorio(id: any, referencia: any, descripcion: any, version: any) {
+    const selectedData = { id, referencia, descripcion, version };
+    this.sharedDataService.setDataLaboratorio(selectedData);
+    this.navCtrl.navigateForward('/home/laboratorio');
   }
 
 }
