@@ -19,7 +19,8 @@ export class GeneralPage implements OnInit {
   selectedRow: number | null = null; // Rastrea la fila seleccionada
   filteredData: any[] = []; // Datos filtrados
   sortColumn: string = ''; // Columna actualmente ordenada
-  sortDirection: 'asc' | 'desc' = 'desc'; // Dirección de orden actual
+  sortColumnAux: string = ''; // Columna ultima ordenada
+  sortDirection: 'asc' | 'desc' = 'asc'; // Dirección de orden actual
   role: string | null = null;
 
   // Propiedades para los filtros
@@ -39,15 +40,19 @@ export class GeneralPage implements OnInit {
   async ngOnInit() {
 
     //Ordeno por fecha envío logística desc.
-    //this.sortColumn = 'fdtLogisticaEnvio'; // Columna por defecto
+    this.sortColumn = 'fdtLogisticaEnvio'; // Columna por defecto
     //await this.loadGeneralData();
     this.role = this.authService.getRole();
   }
 
   async ionViewWillEnter() {
+    this.sharedDataService.clearDataDiseno();
+    this.sharedDataService.clearDataCalidad();
+    this.sharedDataService.clearDataLaboratorio();
     this.sortColumn = 'fdtLogisticaEnvio'; // Columna por defecto
     await this.loadGeneralData();
     this.role = this.authService.getRole();
+    this.selectedRow = null;
   }
 
   // Método para cargar los datos
@@ -55,18 +60,22 @@ export class GeneralPage implements OnInit {
     this.loading = true;
     this.error = null;
     try {
-      this.generalData = await this.generalService.getGeneralData();
-      this.filteredData = this.generalData;
-      this.sortData(this.sortColumn);
-      console.log('Datos obtenidos:', this.generalData);
+      await this.generalService.getGeneralData().then(data => {
+        this.generalData = data;
+        this.filteredData = this.generalData;
+        if(this.sortColumn !== this.sortColumnAux){
+          this.sortData(this.sortColumn);
+          this.sortColumnAux = this.sortColumn;
+        };
+        console.log('Datos obtenidos:', this.generalData);
+      });
+
     } catch (error) {
       this.error = "Error al cargar los datos.";
     } finally {
       this.loading = false;
     }
   }
-
-
 
   // Alternar detalles de la fila seleccionada
   toggleDetails(index: number) {
@@ -140,7 +149,7 @@ export class GeneralPage implements OnInit {
     const selectedData = { id, referencia, descripcion, version };
     this.sharedDataService.setDataDiseno(selectedData);
     this.navCtrl.navigateForward('/home/diseno');
-   
+
     /**this.navCtrl.navigateForward('/home/diseno', {
       queryParams: {
         fcReferencia: referencia,

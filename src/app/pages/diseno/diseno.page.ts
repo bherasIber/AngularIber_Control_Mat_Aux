@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { GeneralService } from 'src/app/services/handler.service';
 import { SharedDataService } from '../../services/shared-data.service';  // Importamos el servicio
 import { AuthService } from '../../services/auth.service';
+import { ModalController } from '@ionic/angular';
+import { ModalSelectionComponent } from '../../components/modal-selection/modal-selection.component';
 
 
 @Component({
@@ -29,6 +31,7 @@ export class DisenoPage implements OnInit {
     private sharedDataService: SharedDataService,
     private authService: AuthService,
     private router: Router,
+    private modalCtrl: ModalController,
   ) {}
 
   ngOnInit() {
@@ -58,10 +61,13 @@ export class DisenoPage implements OnInit {
       this.fcId = data.id;
       this.fcVersion = data.version;
 
-    } else {
+    } ;
+    /**else {
       // Si no hay datos, redirigir o manejar el estado de error
       console.error('No se encontraron datos compartidos.');
+      this.openModal();
     }
+    */
 
     this.listaEmailData = this.sharedDataService.getListaEmailData();
 
@@ -75,6 +81,56 @@ export class DisenoPage implements OnInit {
     */
   }
 
+  async ionViewWillEnter() {
+    const data = this.sharedDataService.getDataDiseno();
+    if (data) {
+
+      this.disenoForm.patchValue({
+        fcReferencia: data.referencia,
+        fcDescripcion: data.descripcion,
+      });
+
+      this.fcId = data.id;
+      this.fcVersion = data.version;
+
+    } else {
+      // Si no hay datos, redirigir o manejar el estado de error
+      console.error('No se encontraron datos compartidos.');
+      this.openModal();
+    }
+  }
+
+  async openModal() {
+    const topModal = await this.modalCtrl.getTop(); // Obtiene el modal actual (si hay uno)
+    if (topModal) {
+      console.log('El modal ya está abierto.');
+      return; // Evita abrir otro modal
+    };
+
+    const modal = await this.modalCtrl.create({
+      component: ModalSelectionComponent,
+      componentProps: { rol: "diseño" }, // Pasar el rol correspondiente
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data) {
+      console.log('Elemento seleccionado:', data);
+      // Realiza la lógica con el elemento seleccionado
+      this.disenoForm.patchValue({
+        fcReferencia: data.fcReferencia,
+        fcDescripcion: data.fcDesciripcion,
+      });
+
+      this.fcId = data.fcId;
+      this.fcVersion = data.fcVersion;
+    } else {
+      this.sharedDataService.clearDataDiseno();
+      this.router.navigate(['/home/general']);
+    }
+  }
+
   async guardarDatos() {
     if (this.disenoForm.valid) {
       const formData = this.disenoForm.value;
@@ -82,9 +138,9 @@ export class DisenoPage implements OnInit {
 
       const cc = this.listaEmailData.find((item: { fcTipoLista: string; }) => item.fcTipoLista === "ADMIN").fcEmailLista;
 
-      formData.fdtDisenoRecibido = formData.fdtDisenoRecibido +  ":00";
-      formData.fdtDisenoRevisado = formData.fdtDisenoRevisado +  ":00";
-      formData.fdtDisenoEnvio = formData.fdtDisenoEnvio +  ":00";
+      formData.fdtDisenoRecibido = formData.fdtDisenoRecibido.length <= 16 ? (formData.fdtDisenoRecibido +  ":00") : formData.fdtDisenoRecibido;
+      formData.fdtDisenoRevisado = formData.fdtDisenoRevisado.length <= 16 ? (formData.fdtDisenoRevisado +  ":00") : formData.fdtDisenoRevisado;
+      formData.fdtDisenoEnvio = formData.fdtDisenoEnvio.length <= 16 ? (formData.fdtDisenoEnvio +  ":00") : formData.fdtDisenoEnvio;
 
 
       if (formData.fcDisenoObs.length <= 0)
@@ -131,7 +187,9 @@ export class DisenoPage implements OnInit {
           };
 
           this.limpiarFormulario();
+          this.sharedDataService.clearDataDiseno();
           this.router.navigate(['/home/general']);
+
 
         })
         .catch((error) => {

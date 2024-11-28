@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { GeneralService } from 'src/app/services/handler.service';
 import { SharedDataService } from '../../services/shared-data.service';  // Importamos el servicio
 import { AuthService } from '../../services/auth.service';
+import { ModalController } from '@ionic/angular';
+import { ModalSelectionComponent } from 'src/app/components/modal-selection/modal-selection.component';
 
 
 @Component({
@@ -29,6 +31,7 @@ export class CalidadPage implements OnInit {
     private sharedDataService: SharedDataService,
     private authService: AuthService,
     private router: Router,
+    private modalCtrl: ModalController,
   ) {}
 
   ngOnInit() {
@@ -75,6 +78,56 @@ export class CalidadPage implements OnInit {
     */
   }
 
+  async ionViewWillEnter() {
+    const data = this.sharedDataService.getDataCalidad();
+    if (data) {
+
+      this.calidadForm.patchValue({
+        fcReferencia: data.referencia,
+        fcDescripcion: data.descripcion,
+      });
+
+      this.fcId = data.id;
+      this.fcVersion = data.version;
+
+    } else {
+      // Si no hay datos, redirigir o manejar el estado de error
+      console.error('No se encontraron datos compartidos.');
+      this.openModal();
+    }
+  }
+
+  async openModal() {
+    const topModal = await this.modalCtrl.getTop(); // Obtiene el modal actual (si hay uno)
+    if (topModal) {
+      console.log('El modal ya está abierto.');
+      return; // Evita abrir otro modal
+    };
+
+    const modal = await this.modalCtrl.create({
+      component: ModalSelectionComponent,
+      componentProps: { rol: "calidad" }, // Pasar el rol correspondiente
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data) {
+      console.log('Elemento seleccionado:', data);
+      // Realiza la lógica con el elemento seleccionado
+      this.calidadForm.patchValue({
+        fcReferencia: data.fcReferencia,
+        fcDescripcion: data.fcDesciripcion,
+      });
+
+      this.fcId = data.fcId;
+      this.fcVersion = data.fcVersion;
+    } else {
+      this.sharedDataService.clearDataCalidad();
+      this.router.navigate(['/home/general']);
+    }
+  }
+
   async guardarDatos() {
     if (this.calidadForm.valid) {
       const formData = this.calidadForm.value;
@@ -82,9 +135,9 @@ export class CalidadPage implements OnInit {
 
       const cc = this.listaEmailData.find((item: { fcTipoLista: string; }) => item.fcTipoLista === "ADMIN").fcEmailLista;
 
-      formData.fdtCalidadRecibido = formData.fdtCalidadRecibido +  ":00";
-      formData.fdtCalidadRevisado = formData.fdtCalidadRevisado +  ":00";
-      formData.fdtCalidadEnvio = formData.fdtCalidadEnvio +  ":00";
+      formData.fdtCalidadRecibido = formData.fdtCalidadRecibido.length <= 16 ? (formData.fdtCalidadRecibido +  ":00") : formData.fdtCalidadRecibido;
+      formData.fdtCalidadRevisado = formData.fdtCalidadRevisado.length <= 16 ? (formData.fdtCalidadRevisado +  ":00") : formData.fdtCalidadRevisado;
+      formData.fdtCalidadEnvio = formData.fdtCalidadEnvio.length <= 16 ? (formData.fdtCalidadEnvio +  ":00") : formData.fdtCalidadEnvio;
 
 
       if (formData.fcCalidadObs.length <= 0)
@@ -104,12 +157,12 @@ export class CalidadPage implements OnInit {
               this.para, // TO
               '-', // BCC
               cc, // CC
-              `Registro actualizado desde Diseño, satisfactorio. Referencia: ${formData.fcReferencia}-${this.fcVersion}`, // SUBJECT
+              `Registro actualizado desde Calidad, satisfactorio. Referencia: ${formData.fcReferencia}-${this.fcVersion}`, // SUBJECT
               `Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}`, // TEXT
-              `<p>Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}<_p><p>Diseño Envío: ${formData.fdtCalidadEnvio}, Observaciones: ${formData.fcCalidadObs}<_p>`, // BODY
+              `<p>Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}<_p><p>Calidad Envío: ${formData.fdtCalidadEnvio}, Observaciones: ${formData.fcCalidadObs}<_p>`, // BODY
               '-', // ADJUNTO
-              'Diseño', // CODUSUARIO
-              formData.fdtDisenoEnvio, // FECHAINICIO
+              'Calidad', // CODUSUARIO
+              formData.fdtCalidadEnvio, // FECHAINICIO
               new Date().toISOString() // FECHAFIN
             );
           } else {
@@ -120,12 +173,12 @@ export class CalidadPage implements OnInit {
               this.para, // TO
               '-', // BCC
               cc, // CC
-              `Registro actualizado desde Diseño rechazado. Referencia: ${formData.fcReferencia}-${this.fcVersion}`, // SUBJECT
+              `Registro actualizado desde Calidad rechazado. Referencia: ${formData.fcReferencia}-${this.fcVersion}`, // SUBJECT
               `Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}`, // TEXT
-              `<p>Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}<_p><p>Diseño Envío: ${formData.fdtCalidadEnvio}, Observaciones: ${formData.fcCalidadObs}<_p>`, // BODY
+              `<p>Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}<_p><p>Calidad Envío: ${formData.fdtCalidadEnvio}, Observaciones: ${formData.fcCalidadObs}<_p>`, // BODY
               '-', // ADJUNTO
-              'Diseño', // CODUSUARIO
-              formData.fdtDisenoEnvio, // FECHAINICIO
+              'Calidad', // CODUSUARIO
+              formData.fdtCalidadEnvio, // FECHAINICIO
               new Date().toISOString() // FECHAFIN
             );
           };

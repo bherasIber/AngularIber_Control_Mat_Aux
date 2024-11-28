@@ -4,8 +4,10 @@
   </ion-toolbar>
 </ion-header>
 
+<ion-content id="container"  *ngIf="loading" >
+  <ion-spinner ></ion-spinner>
+</ion-content>
 <ion-content>
-  <ion-spinner *ngIf="loading"></ion-spinner>
   <p *ngIf="error">{{ error }}</p>
   <!--ion-list *ngIf="!loading && !error">
     <ion-item *ngFor="let item of generalData">
@@ -229,6 +231,9 @@
                     <p><strong>Revisado:</strong> {{ item.fdtLaboratorioRevisado | date: 'dd/MM/yyyy HH:mm a' }}</p>
                     <p><strong>Envío:</strong> {{ item.fdtLaboratorioFinalizado | date: 'dd/MM/yyyy HH:mm a'  }}</p>
                     <p><strong>Observaciones:</strong> {{ item.fcLaboratorioObs }}</p>
+                    <ion-button size="small" *ngIf="item.fdtLaboratorioRevisado === null && item.fdtCalidadRevisado !== null && item.fbCalidadRevisado === true && (role === 'laboratorio' || role === 'admin')" (click)="tratarReferenciaLaboratorio(item.fcId, item.fcReferencia, item.fcDesciripcion, item.fcVersion)">
+                      Editar
+                    </ion-button>
                   </div>
                 </td>
               </tr>

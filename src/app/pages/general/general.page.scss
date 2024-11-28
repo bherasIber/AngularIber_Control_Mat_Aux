@@ -43,3 +43,17 @@ th {
 ion-icon {
   font-size: 1.5rem; /* Ajusta el tamaño del icono */
 }
+
+ion-spinner {
+  margin-top: 100px;
+  width: 100px;
+  height: 100px;
+  color: #c58338
+}
+
+#container {
+  text-align: center;
+  left: 0;
+  right: 50;
+  top: 50;
+}
