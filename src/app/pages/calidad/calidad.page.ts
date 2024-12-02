@@ -21,6 +21,7 @@ export class CalidadPage implements OnInit {
   role: string | null = null;
   fcId: string = '';
   fcVersion: string = '00';
+  fbReposicion: boolean = false;
   listaEmailData: any;
   para: any;
 
@@ -60,6 +61,7 @@ export class CalidadPage implements OnInit {
 
       this.fcId = data.id;
       this.fcVersion = data.version;
+      this.fbReposicion = data.reposicion;
 
     } else {
       // Si no hay datos, redirigir o manejar el estado de error
@@ -89,6 +91,7 @@ export class CalidadPage implements OnInit {
 
       this.fcId = data.id;
       this.fcVersion = data.version;
+      this.fbReposicion = data.reposicion;
 
     } else {
       // Si no hay datos, redirigir o manejar el estado de error
@@ -122,6 +125,7 @@ export class CalidadPage implements OnInit {
 
       this.fcId = data.fcId;
       this.fcVersion = data.fcVersion;
+      this.fbReposicion = data.fbReposicion;
     } else {
       this.sharedDataService.clearDataCalidad();
       this.router.navigate(['/home/general']);
@@ -157,9 +161,10 @@ export class CalidadPage implements OnInit {
               this.para, // TO
               '-', // BCC
               cc, // CC
-              `Registro actualizado desde Calidad, satisfactorio. Referencia: ${formData.fcReferencia}-${this.fcVersion}`, // SUBJECT
+              `Registro actualizado desde Calidad, satisfactorio. Referencia: ${formData.fcReferencia}-${this.fcVersion}, Reposición: ${this.fbReposicion ? "Si" : "No"}`, // SUBJECT
               `Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}`, // TEXT
-              `<p>Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}<_p><p>Calidad Envío: ${formData.fdtCalidadEnvio}, Observaciones: ${formData.fcCalidadObs}<_p>`, // BODY
+              `<p>Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}<_p><p>Calidad Envío: ${formData.fdtCalidadEnvio}, Observaciones: ${formData.fcCalidadObs}<_p>
+               <p>Reposición: ${this.fbReposicion ? "Si" : "No"}<_p>`, // BODY
               '-', // ADJUNTO
               'Calidad', // CODUSUARIO
               formData.fdtCalidadEnvio, // FECHAINICIO
@@ -167,15 +172,18 @@ export class CalidadPage implements OnInit {
             );
           } else {
             this.para = this.listaEmailData.find((item: { fcTipoLista: string; }) => item.fcTipoLista === "DISEÑO").fcEmailLista;
+            this.para = this.para + ";" + this.listaEmailData.find((item: { fcTipoLista: string; }) => item.fcTipoLista === "LABORATORIO").fcEmailLista;
+            this.para = this.para + ";" + this.listaEmailData.find((item: { fcTipoLista: string; }) => item.fcTipoLista === "COMPRAS").fcEmailLista;
             //Envio email actualización
             // Llamar al servicio para enviar el correo
             this.generalService.enviarEmail(
               this.para, // TO
               '-', // BCC
               cc, // CC
-              `Registro actualizado desde Calidad rechazado. Referencia: ${formData.fcReferencia}-${this.fcVersion}`, // SUBJECT
+              `Registro actualizado desde Calidad rechazado. Referencia: ${formData.fcReferencia}-${this.fcVersion}, Reposición: ${this.fbReposicion ? "Si" : "No"}`, // SUBJECT
               `Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}`, // TEXT
-              `<p>Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}<_p><p>Calidad Envío: ${formData.fdtCalidadEnvio}, Observaciones: ${formData.fcCalidadObs}<_p>`, // BODY
+              `<p>Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}<_p><p>Calidad Envío: ${formData.fdtCalidadEnvio}, Observaciones: ${formData.fcCalidadObs}<_p>
+               <p>Reposición: ${this.fbReposicion ? "Si" : "No"}<_p>`, // BODY
               '-', // ADJUNTO
               'Calidad', // CODUSUARIO
               formData.fdtCalidadEnvio, // FECHAINICIO

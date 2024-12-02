@@ -16,13 +16,15 @@ export class LogisticaPage implements OnInit {
     fcDesciripcion: '',
     fdtLogisticaEnvio: '',
     fcLogisticaObs: '',
-    fcVersion: ''
+    fcVersion: '',
+    fbReposicion: false
   };
   datos: any[] = [];
+  datosVersion: any[] = [];
 
   listaEmailData: any;
 
-  constructor(private generalService: GeneralService, private toastController: ToastController, private router: Router, 
+  constructor(private generalService: GeneralService, private toastController: ToastController, private router: Router,
               private alertController: AlertController, private sharedDataService: SharedDataService) {}
 
   ngOnInit() {
@@ -38,7 +40,8 @@ export class LogisticaPage implements OnInit {
       fcDesciripcion: '',
       fdtLogisticaEnvio: '',
       fcLogisticaObs: '',
-      fcVersion: ''
+      fcVersion: '',
+      fbReposicion: false
     };
   }
 
@@ -87,9 +90,11 @@ export class LogisticaPage implements OnInit {
           this.listaEmailData.find((item: { fcTipoLista: string; }) => item.fcTipoLista === "DISEÑO").fcEmailLista, // TO
           '-', // BCC
           this.listaEmailData.find((item: { fcTipoLista: string; }) => item.fcTipoLista === "ADMIN").fcEmailLista, // CC
-          `Nuevo Registro de Logística. Referencia: ${this.logisticaData.fcReferencia}, Versión: ${this.logisticaData.fcVersion}`, // SUBJECT
+          `Nuevo Registro de Logística. Referencia: ${this.logisticaData.fcReferencia}, Versión: ${this.logisticaData.fcVersion}, Reposición: ${this.logisticaData.fbReposicion ? "Si" : "No"}`, // SUBJECT
           `Referencia: ${this.logisticaData.fcReferencia}-${this.logisticaData.fcVersion}, Descripción: ${this.logisticaData.fcDesciripcion.replace(/\//g, ' ').replace(/\%/g, ' ')}`, // TEXT
-          `<p>Referencia: ${this.logisticaData.fcReferencia}-${this.logisticaData.fcVersion}, Descripción: ${this.logisticaData.fcDesciripcion.replace(/\//g, ' ').replace(/\%/g, ' ')}<_p><p>Logística Envío: ${this.logisticaData.fdtLogisticaEnvio}, Observaciones: ${this.logisticaData.fcLogisticaObs}<_p>`, // BODY
+          `<p>Referencia: ${this.logisticaData.fcReferencia}-${this.logisticaData.fcVersion}, Descripción: ${this.logisticaData.fcDesciripcion.replace(/\//g, ' ').replace(/\%/g, ' ')}<_p>
+           <p>Reposición: ${this.logisticaData.fbReposicion ? "Si" : "No"}<_p>
+           <p>Logística Envío: ${this.logisticaData.fdtLogisticaEnvio}, Observaciones: ${this.logisticaData.fcLogisticaObs}<_p>`, // BODY
           '-', // ADJUNTO
           'Logistica', // CODUSUARIO
           this.logisticaData.fdtLogisticaEnvio, // FECHAINICIO
@@ -115,9 +120,15 @@ export class LogisticaPage implements OnInit {
     console.log('Obtengo la descipción de:', this.logisticaData.fcReferencia);
     if(event.target.value){
       try {
+        //Obtenemos la descripción del producto
         this.datos = await this.generalService.getDescripcionArticulo(event.target.value);
         this.logisticaData.fcDesciripcion = this.datos[0].RESULTADOS;
-        console.log('Descripción obtenida correctamente');
+        //Obtengo la versión del producto
+        this.datosVersion = await this.generalService.getVersionArticulo(event.target.value);
+        console.log(this.datosVersion);
+        this.logisticaData.fcVersion = this.datosVersion[0].VERSION ? this.datosVersion[0].VERSION.split('-')[1] || "00" : "00";
+
+        console.log('Descripción y versión obtenida correctamente');
       } catch (error) {
         console.error('Descripción no obtenida:', error);
       }

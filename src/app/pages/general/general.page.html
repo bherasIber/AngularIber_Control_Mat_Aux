@@ -144,6 +144,27 @@
                 </ion-select>
               </th>
               <th style="width: 5%;">Versión</th>
+              <th style="width: 5%;">
+                <span (click)="sortData('fbReposicion')">
+                  Reposición
+                  <ion-icon
+                    name="arrow-up-outline"
+                    *ngIf="sortColumn === 'fbReposicion' && sortDirection === 'asc'"
+                  ></ion-icon>
+                  <ion-icon
+                    name="arrow-down-outline"
+                    *ngIf="sortColumn === 'fbReposicion' && sortDirection === 'desc'"
+                  ></ion-icon>
+                </span>
+                <ion-select
+                  [(ngModel)]="filters.fbReposicion"
+                  (ionChange)="applyFilters()"
+                >
+                  <ion-select-option value="">Todos</ion-select-option>
+                  <ion-select-option value="true">Sí</ion-select-option>
+                  <ion-select-option value="false">No</ion-select-option>
+                </ion-select>
+              </th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -185,6 +206,16 @@
                   </div>
                 </td>
                 <td>{{ item.fcVersion }}</td>
+                <td class="icon-text-cell">
+                  <div class="icon-text-wrapper">
+                    <span>{{ item.fbReposicion ? 'Sí' : 'No' }}</span>
+                    <ion-icon *ngIf="item.fbReposicion !== null"
+                    [name]="item.fbReposicion === true ? 'cube' : ''"
+                    slot="end"
+                    [color]="item.fbReposicion === true ? 'warning' : ''"
+                    ></ion-icon>
+                  </div>
+                </td>
                 <td>
                   <ion-button size="small" color="primary" (click)="toggleDetails(i)">
                     {{ selectedRow === i ? 'Ocultar' : 'Ver más' }}
@@ -207,7 +238,7 @@
                     <p><strong>Revisado:</strong> {{ item.fdtDisenoRevisado | date: 'dd/MM/yyyy HH:mm a' }}</p>
                     <p><strong>Envío:</strong> {{ item.fdtDisenoEnvio | date: 'dd/MM/yyyy HH:mm a'  }}</p>
                     <p><strong>Observaciones:</strong> {{ item.fcDisenoObs }}</p>
-                    <ion-button size="small" *ngIf="item.fdtDisenoRevisado === null && (role === 'diseño' || role === 'admin')" (click)="tratarReferenciaDiseno(item.fcId, item.fcReferencia, item.fcDesciripcion, item.fcVersion)">
+                    <ion-button size="small" *ngIf="item.fdtDisenoRevisado === null && (role === 'diseño' || role === 'admin')" (click)="tratarReferenciaDiseno(item.fcId, item.fcReferencia, item.fcDesciripcion, item.fcVersion, item.fbReposicion)">
                       Editar
                     </ion-button>
                   </div>
@@ -219,19 +250,19 @@
                     <p><strong>Revisado:</strong> {{ item.fdtCalidadRevisado | date: 'dd/MM/yyyy HH:mm a' }}</p>
                     <p><strong>Envío:</strong> {{ item.fdtCalidadEnvio | date: 'dd/MM/yyyy HH:mm a'  }}</p>
                     <p><strong>Observaciones:</strong> {{ item.fcCalidadObs }}</p>
-                    <ion-button size="small" *ngIf="item.fdtCalidadRevisado === null && item.fdtDisenoRevisado !== null && item.fbDisenoRevisado === true && (role === 'calidad' || role === 'admin')" (click)="tratarReferenciaCalidad(item.fcId, item.fcReferencia, item.fcDesciripcion, item.fcVersion)">
+                    <ion-button size="small" *ngIf="item.fdtCalidadRevisado === null && item.fdtDisenoRevisado !== null && item.fbDisenoRevisado === true && (role === 'calidad' || role === 'admin')" (click)="tratarReferenciaCalidad(item.fcId, item.fcReferencia, item.fcDesciripcion, item.fcVersion, item.fbReposicion)">
                       Editar
                     </ion-button>
                   </div>
                 </td>
-                <td colspan="2">
+                <td colspan="3">
                   <div class="{{(item.fdtLaboratorioRevisado !== null && item.fbLaboratorioRevisado === true) || item.fdtLaboratorioRevisado === null ? 'details' : 'detailsError'}}">
                     <h4><strong>Laboratorio</strong></h4>
                     <p><strong>Recibido:</strong> {{ item.fdtLaboratorioRecibido | date: 'dd/MM/yyyy HH:mm a' }}</p>
                     <p><strong>Revisado:</strong> {{ item.fdtLaboratorioRevisado | date: 'dd/MM/yyyy HH:mm a' }}</p>
                     <p><strong>Envío:</strong> {{ item.fdtLaboratorioFinalizado | date: 'dd/MM/yyyy HH:mm a'  }}</p>
                     <p><strong>Observaciones:</strong> {{ item.fcLaboratorioObs }}</p>
-                    <ion-button size="small" *ngIf="item.fdtLaboratorioRevisado === null && item.fdtCalidadRevisado !== null && item.fbCalidadRevisado === true && (role === 'laboratorio' || role === 'admin')" (click)="tratarReferenciaLaboratorio(item.fcId, item.fcReferencia, item.fcDesciripcion, item.fcVersion)">
+                    <ion-button size="small" *ngIf="item.fdtLaboratorioRevisado === null && item.fdtCalidadRevisado !== null && item.fbCalidadRevisado === true && (role === 'laboratorio' || role === 'admin')" (click)="tratarReferenciaLaboratorio(item.fcId, item.fcReferencia, item.fcDesciripcion, item.fcVersion, item.fbReposicion)">
                       Editar
                     </ion-button>
                   </div>

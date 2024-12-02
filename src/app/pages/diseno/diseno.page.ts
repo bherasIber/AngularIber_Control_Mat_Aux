@@ -21,6 +21,7 @@ export class DisenoPage implements OnInit {
   role: string | null = null;
   fcId: string = '';
   fcVersion: string = '00';
+  fbReposicion: boolean = false;
   listaEmailData: any;
   para: any;
 
@@ -60,6 +61,7 @@ export class DisenoPage implements OnInit {
 
       this.fcId = data.id;
       this.fcVersion = data.version;
+      this.fbReposicion = data.reposicion
 
     } ;
     /**else {
@@ -92,6 +94,7 @@ export class DisenoPage implements OnInit {
 
       this.fcId = data.id;
       this.fcVersion = data.version;
+      this.fbReposicion = data.reposicion
 
     } else {
       // Si no hay datos, redirigir o manejar el estado de error
@@ -125,6 +128,8 @@ export class DisenoPage implements OnInit {
 
       this.fcId = data.fcId;
       this.fcVersion = data.fcVersion;
+      this.fbReposicion = data.fbReposicion;
+
     } else {
       this.sharedDataService.clearDataDiseno();
       this.router.navigate(['/home/general']);
@@ -160,25 +165,29 @@ export class DisenoPage implements OnInit {
               this.para, // TO
               '-', // BCC
               cc, // CC
-              `Registro actualizado desde Diseño, satisfactorio. Referencia: ${formData.fcReferencia}-${this.fcVersion}`, // SUBJECT
+              `Registro actualizado desde Diseño, satisfactorio. Referencia: ${formData.fcReferencia}-${this.fcVersion}, Reposición: ${this.fbReposicion ? "Si" : "No"}`, // SUBJECT
               `Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}`, // TEXT
-              `<p>Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}<_p><p>Diseño Envío: ${formData.fdtDisenoEnvio}, Observaciones: ${formData.fcDisenoObs}<_p>`, // BODY
+              `<p>Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}<_p><p>Diseño Envío: ${formData.fdtDisenoEnvio}, Observaciones: ${formData.fcDisenoObs}<_p>
+               <p>Reposición: ${this.fbReposicion ? "Si" : "No"}<_p>`, // BODY
               '-', // ADJUNTO
               'Diseño', // CODUSUARIO
               formData.fdtDisenoEnvio, // FECHAINICIO
               new Date().toISOString() // FECHAFIN
             );
           } else {
-            this.para = this.listaEmailData.find((item: { fcTipoLista: string; }) => item.fcTipoLista === "LOGISTICA").fcEmailLista;
+            this.para = this.listaEmailData.find((item: { fcTipoLista: string; }) => item.fcTipoLista === "CALIDAD").fcEmailLista;
+            this.para = this.para + ";" + this.listaEmailData.find((item: { fcTipoLista: string; }) => item.fcTipoLista === "LABORATORIO").fcEmailLista;
+            this.para = this.para + ";" + this.listaEmailData.find((item: { fcTipoLista: string; }) => item.fcTipoLista === "COMPRAS").fcEmailLista;
             //Envio email actualización
             // Llamar al servicio para enviar el correo
             this.generalService.enviarEmail(
               this.para, // TO
               '-', // BCC
               cc, // CC
-              `Registro actualizado desde Diseño rechazado. Referencia: ${formData.fcReferencia}-${this.fcVersion}`, // SUBJECT
+              `Registro actualizado desde Diseño rechazado. Referencia: ${formData.fcReferencia}-${this.fcVersion}, Reposición: ${this.fbReposicion ? "Si" : "No"}`, // SUBJECT
               `Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}`, // TEXT
-              `<p>Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}<_p><p>Diseño Envío: ${formData.fdtDisenoEnvio}, Observaciones: ${formData.fcDisenoObs}<_p>`, // BODY
+              `<p>Referencia: ${formData.fcReferencia}-${this.fcVersion}, Descripción: ${formData.fcDescripcion.toString().replace(/\//g, ' ').replace(/\%/g, ' ')}<_p><p>Diseño Envío: ${formData.fdtDisenoEnvio}, Observaciones: ${formData.fcDisenoObs}<_p>
+               <p>Reposición: ${this.fbReposicion ? "Si" : "No"}<_p>`, // BODY
               '-', // ADJUNTO
               'Diseño', // CODUSUARIO
               formData.fdtDisenoEnvio, // FECHAINICIO

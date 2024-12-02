@@ -106,7 +106,7 @@ export class GeneralService {
     console.log('Recurso eliminado:', response);
   }); */
 
-  // Método para obtener datos del web service get
+  // Método para obtener datos descipción de un artículo.
   async getDescripcionArticulo(referencia: string): Promise<any> {
     try {
       const response = await axios.get(`${this.baseUrl}/getDatoFuncion/ZMFMM_WM_MATNR/MAKTX&${referencia}&MAKT`);
@@ -116,6 +116,18 @@ export class GeneralService {
       throw error;
     }
   }
+
+  // Método para obtener datos descipción de un artículo.
+  async getVersionArticulo(referencia: string): Promise<any> {
+    try {
+      const response = await axios.get(`${this.baseUrl}/getDatoFuncion/ZMM_GET_CHAR_VERSION_MATERIAL/${referencia}`);
+      return response.data; // Retorna los datos obtenidos
+    } catch (error) {
+      console.error('Error al obtener datos del web service', error);
+      throw error;
+    }
+  }
+
 
   //Enviar Email.
   async enviarEmail(

@@ -32,6 +32,7 @@ export class GeneralPage implements OnInit {
     fbDisenoRevisado: '',
     fbCalidadRevisado: '',
     fbLaboratorioRevisado: '',
+    fbReposicion: '',
   };
 
   constructor(private generalService: GeneralService, private navCtrl: NavController, private sharedDataService: SharedDataService,
@@ -103,7 +104,9 @@ export class GeneralPage implements OnInit {
         (this.filters.fbCalidadRevisado === '' ||
           item.fbCalidadRevisado === JSON.parse(this.filters.fbCalidadRevisado)) &&
         (this.filters.fbLaboratorioRevisado === '' ||
-          item.fbLaboratorioRevisado === JSON.parse(this.filters.fbLaboratorioRevisado))
+          item.fbLaboratorioRevisado === JSON.parse(this.filters.fbLaboratorioRevisado)) &&
+        (this.filters.fbReposicion === '' ||
+          item.fbReposicion === JSON.parse(this.filters.fbReposicion))
       );
     });
   }
@@ -145,7 +148,7 @@ export class GeneralPage implements OnInit {
     });
   }
 
-  tratarReferenciaDiseno(id: any, referencia: any, descripcion: any, version: any) {
+  tratarReferenciaDiseno(id: any, referencia: any, descripcion: any, version: any, reposicion: any) {
     const selectedData = { id, referencia, descripcion, version };
     this.sharedDataService.setDataDiseno(selectedData);
     this.navCtrl.navigateForward('/home/diseno');
@@ -158,13 +161,13 @@ export class GeneralPage implements OnInit {
     });*/
   }
 
-  tratarReferenciaCalidad(id: any, referencia: any, descripcion: any, version: any) {
+  tratarReferenciaCalidad(id: any, referencia: any, descripcion: any, version: any, reposicion: any) {
     const selectedData = { id, referencia, descripcion, version };
     this.sharedDataService.setDataCalidad(selectedData);
     this.navCtrl.navigateForward('/home/calidad');
   }
 
-  tratarReferenciaLaboratorio(id: any, referencia: any, descripcion: any, version: any) {
+  tratarReferenciaLaboratorio(id: any, referencia: any, descripcion: any, version: any, reposicion: any) {
     const selectedData = { id, referencia, descripcion, version };
     this.sharedDataService.setDataLaboratorio(selectedData);
     this.navCtrl.navigateForward('/home/laboratorio');

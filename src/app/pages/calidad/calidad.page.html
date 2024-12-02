@@ -7,15 +7,23 @@
 <ion-content>
   <div class="form-container">
     <form [formGroup]="calidadForm" (ngSubmit)="guardarDatos()" class="form-layout">
-      <!-- Referencia y Descripción -->
+      <!-- Referencia y Descripción, versión y reposición -->
       <div class="form-row">
         <div class="form-group small-width">
           <label for="referencia">Referencia:</label>
           <input id="referencia" formControlName="fcReferencia" type="text" placeholder="Referencia" />
         </div>
+        <div class="form-group small-width" style="flex: 0 0 5%;">
+          <label for="version">Versión:</label>
+          <input id="version" [value]="fcVersion" readonly/>
+        </div>
         <div class="form-group">
           <label for="descripcion">Descripción:</label>
           <input id="descripcion" formControlName="fcDescripcion" type="text" placeholder="Descripción" />
+        </div>
+        <div class="form-group small-width" style="flex: 0 0 5%;">
+          <label for="reposicion">Reposición:</label>
+          <input id="reposicion" [value]="fbReposicion ? 'Sí' : 'No'" readonly/>
         </div>
       </div>
 

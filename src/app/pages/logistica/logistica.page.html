@@ -38,7 +38,18 @@
         </ion-item>
       </ion-col>
 
-      <ion-col size="9">
+      <ion-col size="1">
+        <ion-item >
+          <ion-label position="stacked" style="padding-bottom: 10px;">Reposi.</ion-label>
+          <ion-checkbox class="center-content"
+            [(ngModel)]="logisticaData.fbReposicion"
+            [class.invalid]="!logisticaData.fbReposicion"
+            name="fbReposicion"
+          ></ion-checkbox>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size="8">
         <ion-item>
           <ion-label position="stacked" style="padding-bottom: 10px;">Descripción</ion-label>
           <ion-input
